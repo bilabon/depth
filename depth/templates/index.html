@@ -20,36 +20,6 @@
                   </tr>  
                 </thead>  
                 <tbody id='asks'> 
-
-                  <tr>  
-                    <td>001</td>  
-                    <td>Rammohan </td>  
-                  </tr>  
-                  <tr>  
-                    <td>002</td>  
-                    <td>Smita</td>  
-                   </tr> 
-                  <tr>  
-                    <td>002</td>  
-                    <td>Smita</td>  
-                   </tr>  
-                  <tr> 
-                  <tr>  
-                    <td>001</td>  
-                    <td>Rammohan </td>  
-                  </tr>  
-                  <tr>  
-                    <td>002</td>  
-                    <td>Smita</td>  
-                   </tr> 
-                  <tr>  
-                    <td>002</td>  
-                    <td>Smita</td>  
-                   </tr>  
-                  <tr>
-                    <td>003</td>  
-                    <td>Rabindranath</td>  
-         
                   </tr>  
                 </tbody>
         </table>
@@ -68,15 +38,6 @@
                   </tr>  
                 </thead>  
                 <tbody id='bids'> 
-
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
-
                 </tbody>
         </table>
         </div>
@@ -109,7 +70,7 @@ $(document).ready(function() {
     $('#update').click(function()
     {   $('#update').html('Loading...')
         var smallestCoin = $('#smallestCoin').val()
-        $.get("{% url 'ask' %}", {'ask': '#'},
+        $.get("/ask", {'ask': '#'},
             function(data){
                 //data.asks.length
                 var obj = $.parseJSON(data);
@@ -119,7 +80,6 @@ $('#update').html('Update')
                 for(i=0;i<obj.asks.length;i++){
 
                         if (obj.asks[i][1] >= parseFloat(smallestCoin)){
-                            console.log('0----',obj.asks[i][1]);
                             $("#asks").append('<tr style="background-color: #f2dede;"><td>'+obj.asks[i][0]+'</td><td><strong>'+obj.asks[i][1]+'</strong></td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
                         }
                         else{
@@ -127,7 +87,6 @@ $('#update').html('Update')
                         }
 
                         if (obj.bids[i][1] >= parseFloat(smallestCoin)){
-                            console.log('0----',obj.bids[i][1]);
                             $("#bids").append('<tr style="background-color: #f2dede;"><td>'+obj.bids[i][0]+'</td><td><strong>'+obj.bids[i][1]+'</strong></td><td>'+obj.bids[i][0]*obj.bids[i][1]+'</td></tr>');
                         }
                         else{
@@ -139,7 +98,38 @@ $('#update').html('Update')
                 $('#update').click();
             });
         });
-    
+
+    $('#home').click(function()
+    {   $('#update').html('Loading...')
+        var smallestCoin = $('#smallestCoin').val()
+        $.get("/ask", {'ask': '#'},
+            function(data){
+                //data.asks.length
+                var obj = $.parseJSON(data);
+                $("#asks").find('tr').remove()
+                $("#bids").find('tr').remove()
+$('#update').html('Update')
+                for(i=0;i<obj.asks.length;i++){
+
+                        if (obj.asks[i][1] >= parseFloat(smallestCoin)){
+                            $("#asks").append('<tr style="background-color: #f2dede;"><td>'+obj.asks[i][0]+'</td><td><strong>'+obj.asks[i][1]+'</strong></td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
+                        }
+                        else{
+                            $("#asks").append('<tr><td>'+obj.asks[i][0]+'</td><td>'+obj.asks[i][1]+'</td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
+                        }
+
+                        if (obj.bids[i][1] >= parseFloat(smallestCoin)){
+                            $("#bids").append('<tr style="background-color: #f2dede;"><td>'+obj.bids[i][0]+'</td><td><strong>'+obj.bids[i][1]+'</strong></td><td>'+obj.bids[i][0]*obj.bids[i][1]+'</td></tr>');
+                        }
+                        else{
+                            $("#bids").append('<tr><td>'+obj.bids[i][0]+'</td><td>'+obj.bids[i][1]+'</td><td>'+obj.bids[i][0]*obj.bids[i][1]+'</td></tr>');
+                        }
+
+                }
+                
+            });
+        });
+        
     //console.log('images urls:'+{{bids}});
 });
 </script>
