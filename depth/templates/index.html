@@ -70,6 +70,10 @@ $(document).ready(function() {
     $('#update').click(function()
     {   $('#update').html('Loading...')
         var smallestCoin = $('#smallestCoin').val()
+
+    setTimeout(
+        function(){
+
         $.get("/ask", {'ask': '#'},
             function(data){
                 //data.asks.length
@@ -97,6 +101,14 @@ $('#update').html('Update')
                 
                 $('#update').click();
             });
+        },500);
+
+
+
+
+
+
+
         });
 
     $('#home').click(function()
