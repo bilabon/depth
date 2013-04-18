@@ -1,0 +1,6 @@
+*\.pyc
+*.pyc
+*.db
+.env/
+/*/media/*
+*~

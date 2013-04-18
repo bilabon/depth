@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="row-fluid">
+    <!--
+    <div class="span12">
+        <button class="btn btn-small" type="button">Update</button>
+    </div>-->
+    <div class="span12">
+        <div class="span6">
+        <table class="table">  
+                <thead>
+                  <tr style="background-color: #f89406;">  
+                    <th colspan="3" align="center">Ордера на продажу</th>  
+                  </tr> 
+                  <tr style="background-color: #d9edf7;">  
+                    <th>Price</th>  
+                    <th>LTC</th>  
+                    <th>USD</th> 
+                  </tr>  
+                </thead>  
+                <tbody id='asks'> 
+
+                  <tr>  
+                    <td>001</td>  
+                    <td>Rammohan </td>  
+                  </tr>  
+                  <tr>  
+                    <td>002</td>  
+                    <td>Smita</td>  
+                   </tr> 
+                  <tr>  
+                    <td>002</td>  
+                    <td>Smita</td>  
+                   </tr>  
+                  <tr> 
+                  <tr>  
+                    <td>001</td>  
+                    <td>Rammohan </td>  
+                  </tr>  
+                  <tr>  
+                    <td>002</td>  
+                    <td>Smita</td>  
+                   </tr> 
+                  <tr>  
+                    <td>002</td>  
+                    <td>Smita</td>  
+                   </tr>  
+                  <tr>
+                    <td>003</td>  
+                    <td>Rabindranath</td>  
+         
+                  </tr>  
+                </tbody>
+        </table>
+        </div>
+
+        <div class="span6">
+        <table class="table">  
+                <thead>  
+                  <tr style="background-color: #f89406;">  
+                    <th colspan="3" align="center">Ордера на покупку</th>  
+                  </tr> 
+                  <tr style="background-color: #d9edf7;">  
+                    <th>Price</th>  
+                    <th>LTC</th>  
+                    <th>USD</th> 
+                  </tr>  
+                </thead>  
+                <tbody id='bids'> 
+
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+                <tr class="success"><td>2.030001</td><td>35.15075507</td><td>71.35606794285508</td></tr>
+
+                </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Settings</h3>
+  </div>
+  <div class="modal-body">
+
+              <input type="text" id="smallestCoin" placeholder="Filter by min COIN">
+
+
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save changes</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() {
+
+    $('#update').click(function()
+    {   $('#update').html('Loading...')
+        var smallestCoin = $('#smallestCoin').val()
+        $.get("{% url 'ask' %}", {'ask': '#'},
+            function(data){
+                //data.asks.length
+                var obj = $.parseJSON(data);
+                $("#asks").find('tr').remove()
+                $("#bids").find('tr').remove()
+$('#update').html('Update')
+                for(i=0;i<obj.asks.length;i++){
+
+                        if (obj.asks[i][1] >= parseFloat(smallestCoin)){
+                            console.log('0----',obj.asks[i][1]);
+                            $("#asks").append('<tr style="background-color: #f2dede;"><td>'+obj.asks[i][0]+'</td><td><strong>'+obj.asks[i][1]+'</strong></td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
+                        }
+                        else{
+                            $("#asks").append('<tr><td>'+obj.asks[i][0]+'</td><td>'+obj.asks[i][1]+'</td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
+                        }
+
+                        if (obj.bids[i][1] >= parseFloat(smallestCoin)){
+                            console.log('0----',obj.bids[i][1]);
+                            $("#bids").append('<tr style="background-color: #f2dede;"><td>'+obj.bids[i][0]+'</td><td><strong>'+obj.bids[i][1]+'</strong></td><td>'+obj.bids[i][0]*obj.bids[i][1]+'</td></tr>');
+                        }
+                        else{
+                            $("#bids").append('<tr><td>'+obj.bids[i][0]+'</td><td>'+obj.bids[i][1]+'</td><td>'+obj.bids[i][0]*obj.bids[i][1]+'</td></tr>');
+                        }
+
+                }
+                
+                $('#update').click();
+            });
+        });
+    
+    //console.log('images urls:'+{{bids}});
+});
+</script>
+{% endblock %}
