@@ -15,8 +15,8 @@
                   </tr> 
                   <tr style="background-color: #d9edf7;">  
                     <th>Price</th>  
-                    <th>LTC</th>  
-                    <th>USD</th> 
+                    <th class="numerator">numerator</th>  
+                    <th class="denominator">denominator</th> 
                   </tr>  
                 </thead>  
                 <tbody id='asks'> 
@@ -33,8 +33,8 @@
                   </tr> 
                   <tr style="background-color: #d9edf7;">  
                     <th>Price</th>  
-                    <th>LTC</th>  
-                    <th>USD</th> 
+                    <th class="numerator">numerator</th>  
+                    <th class="second_val">denominator</th> 
                   </tr>  
                 </thead>  
                 <tbody id='bids'> 
@@ -52,8 +52,12 @@
   </div>
   <div class="modal-body">
 
-              <input type="text" id="smallestCoin" placeholder="Filter by min COIN">
-
+              <input type="text" id="smallestCoin" placeholder="Подсветка по мин значению.">
+              </br>
+              <input type="text" id="numerator" placeholder="Numerator. example: BTC">
+              <input type="text" id="denominator" placeholder="Denominator. example: USD">
+              </br>
+              <input type="text" id="ava" placeholder="Denominator. example: USD">
 
 
   </div>
