@@ -11,7 +11,7 @@
         <table class="table">  
                 <thead>
                   <tr style="background-color: #f89406;">  
-                    <th colspan="3" align="center">Ордера на продажу</th>  
+                    <th colspan="3" align="center" id="s_ask">Ордера на продажу</th>  
                   </tr> 
                   <tr style="background-color: #d9edf7;">  
                     <th>Price</th>  
@@ -29,7 +29,7 @@
         <table class="table">  
                 <thead>  
                   <tr style="background-color: #f89406;">  
-                    <th colspan="3" align="center">Ордера на покупку</th>  
+                    <th colspan="3" align="center" id="s_bids">Ордера на покупку</th>  
                   </tr> 
                   <tr style="background-color: #d9edf7;">  
                     <th>Price</th>  
@@ -67,6 +67,32 @@
 <script>
 $(document).ready(function() {
 
+function average_price(i_max,  obj){
+var sum;
+var sum_average;
+var s;
+var k;
+var average;
+sum=0;
+sum_average=0;
+s=0;
+k=0;
+average=0;
+
+    for (i=0; i<i_max; i++){
+        sum = sum + obj[i][0];
+    }
+    sum_average = sum/i_max;
+    console.log('sum_average: '+sum_average)
+    for (i=0; i<i_max; i++){
+        s = s + obj[i][1] / sum_average * obj[i][0];
+        k = k + obj[i][1] / sum_average;
+    }
+    average = s/k;
+    return average;
+}
+
+
     $('#update').click(function()
     {   $('#update').html('Loading...')
         var smallestCoin = $('#smallestCoin').val()
@@ -81,7 +107,14 @@ $(document).ready(function() {
                 $("#asks").find('tr').remove()
                 $("#bids").find('tr').remove()
 $('#update').html('Update')
+var i_max=20;
+average_asks = average_price(i_max, obj.asks);
+average_bids = average_price(i_max, obj.bids);
+$('#s_ask').html('Ордера на продажу | last '+i_max+' average price: '+average_asks.toFixed(5))
+$('#s_bids').html('Ордера на покупку | last '+i_max+' average price: '+average_bids.toFixed(5))
+
                 for(i=0;i<obj.asks.length;i++){
+
 
                         if (obj.asks[i][1] >= parseFloat(smallestCoin)){
                             $("#asks").append('<tr style="background-color: #f2dede;"><td>'+obj.asks[i][0]+'</td><td><strong>'+obj.asks[i][1]+'</strong></td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
@@ -101,7 +134,7 @@ $('#update').html('Update')
                 
                 $('#update').click();
             });
-        },500);
+        },1);
 
 
 
@@ -121,6 +154,114 @@ $('#update').html('Update')
                 $("#asks").find('tr').remove()
                 $("#bids").find('tr').remove()
 $('#update').html('Update')
+
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+average_asks = average_price(20, obj.asks);
+average_bids = average_price(20, obj.bids);
+$('#s_ask').html('Ордера на продажу | last 20 average price: '+average_asks.toFixed(5))
+$('#s_bids').html('Ордера на покупку | last 20 average price: '+average_bids.toFixed(5))
+/*
+function average_average_price(i_max,  obj, sum_average){
+var s;
+var k;
+var average;
+s=0;
+k=0;
+average=0;
+
+    for (i=0; i<i_max; i++){
+        s = s + obj[i][1] / sum_average * obj[i][0];
+        k = k + obj[i][1] / sum_average;
+    }
+    average = s/k;
+    return average;
+}
+
+
+
+
+two_average = (average_asks + average_bids)/2;
+console.log('two_average: '+two_average)
+
+sum_average_average = average_average_price(20, obj.asks, two_average)
+console.log('sum_average_average: '+sum_average_average)
+*/
+
+/*
+        var sum15_ask;
+        var sum15_ask_cena;
+        var sum15_ask_sredn_cena;
+        var s;
+        var x;
+        var k;
+        sum15_ask_cena=0;
+        sum15_ask_sredn_cena=0;
+        s=0;
+        x=0;
+        k=0;
+
+ obj.asks[0][0] = 1;
+ obj.asks[1][0] = 2;
+ obj.asks[2][0] = 3;
+ 
+ obj.asks[0][1] = 40;
+ obj.asks[1][1] = 2;
+ obj.asks[2][1] = 10;
+
+                    for(ii=0;ii<20;ii++){
+                        sum15_ask_cena = sum15_ask_cena + obj.asks[ii][0];
+                    }
+                    sum15_ask_sredn_cena = sum15_ask_cena/20;
+                    for(ii=0;ii<20;ii++){
+                        s = s + obj.asks[ii][1]/sum15_ask_sredn_cena*obj.asks[ii][0];
+                        k = k + obj.asks[ii][1]/sum15_ask_sredn_cena;
+                        
+                    }
+                    x = s/k;
+                    //console.log('Ордера на продажу | last 20 average price:'+x);
+                    $('#s_ask').html('Ордера на продажу | last 20 average price: '+x.toFixed(5))
+
+
+        var sum15_bids;
+        var sum15_bids_cena;
+        var sum15_bids_sredn_cena;
+        var s;
+        var x;
+        var k;
+        sum15_bids_cena=0;
+        sum15_bids_sredn_cena=0;
+        s=0;
+        x=0;
+        k=0;
+
+                    for(ii=0;ii<20;ii++){
+                        sum15_bids_cena = sum15_bids_cena + obj.bids[ii][0];
+                    }
+                    sum15_bids_sredn_cena = sum15_bids_cena/20;
+                    for(ii=0;ii<20;ii++){
+                        s = s + obj.bids[ii][1]/sum15_bids_sredn_cena*obj.bids[ii][0];
+                        k = k + obj.bids[ii][1]/sum15_bids_sredn_cena;
+                        
+                    }
+                    x = s/k;
+                    //console.log('Ордера на покупку, средняя цена за 20 ордеров:'+x);
+                    $('#s_bids').html('Ордера на покупку | last 20 average price: '+x.toFixed(5))
+*/
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
                 for(i=0;i<obj.asks.length;i++){
 
                         if (obj.asks[i][1] >= parseFloat(smallestCoin)){
