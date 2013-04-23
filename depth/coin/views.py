@@ -13,7 +13,7 @@ def index(request):
 
 def ask(request):
     if request.method == "GET":
-        data = urllib2.urlopen('https://btc-e.com/api/2/ltc_usd/depth')
+        data = urllib2.urlopen('https://btc-e.com/api/2/trc_btc/depth')
         j = json.load(data)
 
 
