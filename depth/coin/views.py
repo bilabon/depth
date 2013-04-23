@@ -13,13 +13,28 @@ def index(request):
 
 def ask(request):
     if request.method == "GET":
-        data = urllib2.urlopen('https://btc-e.com/api/2/trc_btc/depth')
-        j = json.load(data)
+        numerator = request.GET.get('numerator', 'BTC')
+        denominator = request.GET.get('denominator', 'USD')
 
-
-        bids = j['bids']
-        asks = j['asks']
+        url = 'https://btc-e.com/api/2/%s_%s/depth'%(numerator.lower(), denominator.lower())
+        result = 'success'
+        try:
+            data = urllib2.urlopen(url)
+            j = json.load(data)
+            bids = j['bids']
+            asks = j['asks']
+        except:
+            data = urllib2.urlopen('https://btc-e.com/api/2/btc_usd/depth')
+            j = json.load(data)
+            bids = j['bids']
+            asks = j['asks']
+            numerator = 'BTC'
+            denominator = 'USD'
 
         return HttpResponse(simplejson.dumps({'bids': bids,
-                                              'asks': asks},))
+                                              'asks': asks,
+                                              'result': result,
+                                              'numerator': numerator.upper(),
+                                              'denominator': denominator.upper(),
+                                             },))
 

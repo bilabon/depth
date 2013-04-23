@@ -34,7 +34,7 @@
                   <tr style="background-color: #d9edf7;">  
                     <th>Price</th>  
                     <th class="numerator">numerator</th>  
-                    <th class="second_val">denominator</th> 
+                    <th class="denominator">denominator</th> 
                   </tr>  
                 </thead>  
                 <tbody id='bids'> 
@@ -57,7 +57,7 @@
               <input type="text" id="numerator" placeholder="Numerator. example: BTC">
               <input type="text" id="denominator" placeholder="Denominator. example: USD">
               </br>
-              <input type="text" id="ava" placeholder="Denominator. example: USD">
+              <input type="text" id="coll_orders_for_average_price" placeholder="К-во ордеров для средней цены.">
 
 
   </div>
@@ -100,25 +100,54 @@ average=0;
     $('#update').click(function()
     {   $('#update').html('Loading...')
         var smallestCoin = $('#smallestCoin').val()
-
-    setTimeout(
-        function(){
-
-        $.get("/ask", {'ask': '#'},
+        var numerator = $('#numerator').val()
+        var denominator = $('#denominator').val()
+        if ($('#numerator').val()==''){
+            $('#numerator').val('BTC')
+            $('#denominator').val('USD')
+        }
+        if ($('#coll_orders_for_average_price').val()==''){
+            $('#coll_orders_for_average_price').val(20)
+        }
+        var coll_orders_for_average_price = $('#coll_orders_for_average_price').val()
+        $.get("/ask", {'numerator': numerator, 'denominator':denominator, },
             function(data){
-                //data.asks.length
+
+
+
+                var smallestCoin = $('#smallestCoin').val()
+                var numerator = $('#numerator').val()
+                var denominator = $('#denominator').val()
+                if ($('#numerator').val()==''){
+                    $('#numerator').val('BTC')
+                    $('#denominator').val('USD')
+                }
+                if ($('#coll_orders_for_average_price').val()==''){
+                    $('#coll_orders_for_average_price').val(20)
+                }
+                var coll_orders_for_average_price = $('#coll_orders_for_average_price').val()
+
+
+
                 var obj = $.parseJSON(data);
+                if (obj['result']=='error1'){$('#settings').html('Settings error');}
+                
+                
                 $("#asks").find('tr').remove()
                 $("#bids").find('tr').remove()
-$('#update').html('Update')
-var i_max=20;
-average_asks = average_price(i_max, obj.asks);
-average_bids = average_price(i_max, obj.bids);
-$('#s_ask').html('Ордера на продажу | last '+i_max+' average price: '+average_asks.toFixed(5))
-$('#s_bids').html('Ордера на покупку | last '+i_max+' average price: '+average_bids.toFixed(5))
+                $('#update').html('Update')
+                $('.numerator').html(obj['numerator'])
+                $('.denominator').html(obj['denominator'])
+                $('#logo').html("Depth "+obj['numerator']+"/"+obj['denominator'])
+                
+
+            average_asks = average_price(coll_orders_for_average_price, obj.asks);
+            average_bids = average_price(coll_orders_for_average_price, obj.bids);
+            $('#s_ask').html('Ордера на продажу | last '+coll_orders_for_average_price+' average price: '+average_asks.toFixed(5))
+            $('#s_bids').html('Ордера на покупку | last '+coll_orders_for_average_price+' average price: '+average_bids.toFixed(5))
+
 
                 for(i=0;i<obj.asks.length;i++){
-
 
                         if (obj.asks[i][1] >= parseFloat(smallestCoin)){
                             $("#asks").append('<tr style="background-color: #f2dede;"><td>'+obj.asks[i][0]+'</td><td><strong>'+obj.asks[i][1]+'</strong></td><td>'+obj.asks[i][0]*obj.asks[i][1]+'</td></tr>');
@@ -135,135 +164,58 @@ $('#s_bids').html('Ордера на покупку | last '+i_max+' average pri
                         }
 
                 }
-                
                 $('#update').click();
             });
-        },1);
-
-
-
-
-
-
-
+            
         });
-
     $('#home').click(function()
     {   $('#update').html('Loading...')
         var smallestCoin = $('#smallestCoin').val()
-        $.get("/ask", {'ask': '#'},
+        var numerator = $('#numerator').val()
+        var denominator = $('#denominator').val()
+        if ($('#numerator').val()==''){
+            $('#numerator').val('BTC')
+            $('#denominator').val('USD')
+        }
+        if ($('#coll_orders_for_average_price').val()==''){
+            $('#coll_orders_for_average_price').val(20)
+        }
+        var coll_orders_for_average_price = $('#coll_orders_for_average_price').val()
+        $.get("/ask", {'numerator': numerator, 'denominator':denominator, },
             function(data){
-                //data.asks.length
+
+
+
+                var smallestCoin = $('#smallestCoin').val()
+                var numerator = $('#numerator').val()
+                var denominator = $('#denominator').val()
+                if ($('#numerator').val()==''){
+                    $('#numerator').val('BTC')
+                    $('#denominator').val('USD')
+                }
+                if ($('#coll_orders_for_average_price').val()==''){
+                    $('#coll_orders_for_average_price').val(20)
+                }
+                var coll_orders_for_average_price = $('#coll_orders_for_average_price').val()
+
+
+
                 var obj = $.parseJSON(data);
+                if (obj['result']=='error1'){$('#settings').html('Settings error');}
+                
+                
                 $("#asks").find('tr').remove()
                 $("#bids").find('tr').remove()
-$('#update').html('Update')
+                $('#update').html('Update')
+                $('.numerator').html(obj['numerator'])
+                $('.denominator').html(obj['denominator'])
+                $('#logo').html("Depth "+obj['numerator']+"/"+obj['denominator'])
+                
 
-//--------------------------------------------------------------------------------------------------
-
-
-
-
-average_asks = average_price(20, obj.asks);
-average_bids = average_price(20, obj.bids);
-$('#s_ask').html('Ордера на продажу | last 20 average price: '+average_asks.toFixed(5))
-$('#s_bids').html('Ордера на покупку | last 20 average price: '+average_bids.toFixed(5))
-/*
-function average_average_price(i_max,  obj, sum_average){
-var s;
-var k;
-var average;
-s=0;
-k=0;
-average=0;
-
-    for (i=0; i<i_max; i++){
-        s = s + obj[i][1] / sum_average * obj[i][0];
-        k = k + obj[i][1] / sum_average;
-    }
-    average = s/k;
-    return average;
-}
-
-
-
-
-two_average = (average_asks + average_bids)/2;
-console.log('two_average: '+two_average)
-
-sum_average_average = average_average_price(20, obj.asks, two_average)
-console.log('sum_average_average: '+sum_average_average)
-*/
-
-/*
-        var sum15_ask;
-        var sum15_ask_cena;
-        var sum15_ask_sredn_cena;
-        var s;
-        var x;
-        var k;
-        sum15_ask_cena=0;
-        sum15_ask_sredn_cena=0;
-        s=0;
-        x=0;
-        k=0;
-
- obj.asks[0][0] = 1;
- obj.asks[1][0] = 2;
- obj.asks[2][0] = 3;
- 
- obj.asks[0][1] = 40;
- obj.asks[1][1] = 2;
- obj.asks[2][1] = 10;
-
-                    for(ii=0;ii<20;ii++){
-                        sum15_ask_cena = sum15_ask_cena + obj.asks[ii][0];
-                    }
-                    sum15_ask_sredn_cena = sum15_ask_cena/20;
-                    for(ii=0;ii<20;ii++){
-                        s = s + obj.asks[ii][1]/sum15_ask_sredn_cena*obj.asks[ii][0];
-                        k = k + obj.asks[ii][1]/sum15_ask_sredn_cena;
-                        
-                    }
-                    x = s/k;
-                    //console.log('Ордера на продажу | last 20 average price:'+x);
-                    $('#s_ask').html('Ордера на продажу | last 20 average price: '+x.toFixed(5))
-
-
-        var sum15_bids;
-        var sum15_bids_cena;
-        var sum15_bids_sredn_cena;
-        var s;
-        var x;
-        var k;
-        sum15_bids_cena=0;
-        sum15_bids_sredn_cena=0;
-        s=0;
-        x=0;
-        k=0;
-
-                    for(ii=0;ii<20;ii++){
-                        sum15_bids_cena = sum15_bids_cena + obj.bids[ii][0];
-                    }
-                    sum15_bids_sredn_cena = sum15_bids_cena/20;
-                    for(ii=0;ii<20;ii++){
-                        s = s + obj.bids[ii][1]/sum15_bids_sredn_cena*obj.bids[ii][0];
-                        k = k + obj.bids[ii][1]/sum15_bids_sredn_cena;
-                        
-                    }
-                    x = s/k;
-                    //console.log('Ордера на покупку, средняя цена за 20 ордеров:'+x);
-                    $('#s_bids').html('Ордера на покупку | last 20 average price: '+x.toFixed(5))
-*/
-//--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
+            average_asks = average_price(coll_orders_for_average_price, obj.asks);
+            average_bids = average_price(coll_orders_for_average_price, obj.bids);
+            $('#s_ask').html('Ордера на продажу | last '+coll_orders_for_average_price+' average price: '+average_asks.toFixed(5))
+            $('#s_bids').html('Ордера на покупку | last '+coll_orders_for_average_price+' average price: '+average_bids.toFixed(5))
 
 
                 for(i=0;i<obj.asks.length;i++){
@@ -283,8 +235,8 @@ console.log('sum_average_average: '+sum_average_average)
                         }
 
                 }
-                
             });
+            
         });
         
     //console.log('images urls:'+{{bids}});
